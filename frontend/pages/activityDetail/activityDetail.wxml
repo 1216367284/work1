@@ -1,0 +1,233 @@
+<!-- activityDetail.wxml - 活动详情页面 -->
+<view class="page-container">
+  <!-- 加载中状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <image class="loading-icon" src="/assets/icons/loading.gif" mode="aspectFit"></image>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 活动详情内容 -->
+  <view wx:else class="activity-detail">
+    <!-- 图片轮播 -->
+    <view class="image-carousel">
+      <swiper
+        class="swiper"
+        indicator-dots="true"
+        indicator-active-color="#fff"
+        autoplay="true"
+        interval="3000"
+        duration="500"
+        bindchange="onImageChange"
+        circular="true"
+      >
+        <block wx:for="{{images}}" wx:key="index">
+          <swiper-item>
+            <image
+              class="activity-image"
+              src="{{item}}"
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-index="{{index}}"
+            ></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="image-count">{{currentImageIndex + 1}}/{{images.length}}</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="activity-basic-info">
+      <text class="activity-name">{{activity.name}}</text>
+      
+      <view class="activity-time">
+        <icon class="time-icon" type="clock" size="16"></icon>
+        <text>{{formatDate(activity.startTime)}} - {{formatDate(activity.endTime)}}</text>
+      </view>
+
+      <view class="activity-location">
+        <icon class="location-icon" type="location" size="16"></icon>
+        <text class="location-text">{{activity.location}}</text>
+        <button class="navigate-btn" bindtap="navigateToMap">导航</button>
+      </view>
+
+      <view class="activity-price">
+        <text class="price-label">活动费用：</text>
+        <text wx:if="{{activity.price === 0}}" class="free-text">免费</text>
+        <text wx:else class="price-text">¥{{activity.price}}</text>
+      </view>
+
+      <!-- 倒计时 -->
+      <view class="countdown-section">
+        <text class="countdown-label">距活动结束：</text>
+        <view class="countdown">
+          <view class="time-box">
+            <text class="time-number">{{days}}</text>
+            <text class="time-unit">天</text>
+          </view>
+          <text class="time-separator">:</text>
+          <view class="time-box">
+            <text class="time-number">{{hours < 10 ? '0' + hours : hours}}</text>
+            <text class="time-unit">时</text>
+          </view>
+          <text class="time-separator">:</text>
+          <view class="time-box">
+            <text class="time-number">{{minutes < 10 ? '0' + minutes : minutes}}</text>
+            <text class="time-unit">分</text>
+          </view>
+          <text class="time-separator">:</text>
+          <view class="time-box">
+            <text class="time-number">{{seconds < 10 ? '0' + seconds : seconds}}</text>
+            <text class="time-unit">秒</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 参与人数 -->
+      <view class="participant-count">
+        <text class="count-label">已有 {{participants.length}} 人参与</text>
+      </view>
+    </view>
+
+    <!-- 标签页切换 -->
+    <view class="tabs">
+      <view
+        class="tab {{currentTab === 'overview' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="overview"
+      >
+        活动详情
+      </view>
+      <view
+        class="tab {{currentTab === 'reviews' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="reviews"
+      >
+        评论
+      </view>
+      <view
+        class="tab {{currentTab === 'participants' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="participants"
+      >
+        参与者
+      </view>
+    </view>
+
+    <!-- 活动详情内容 -->
+    <view class="tab-content" wx:if="{{currentTab === 'overview'}}">
+      <view class="section">
+        <text class="section-title">活动介绍</text>
+        <text class="section-content">{{activity.description}}</text>
+      </view>
+
+      <view class="section" wx:if="{{activity.organizer}}">
+        <text class="section-title">活动组织方</text>
+        <text class="section-content">{{activity.organizer}}</text>
+      </view>
+
+      <view class="section" wx:if="{{activity.requirements}}">
+        <text class="section-title">活动要求</text>
+        <text class="section-content">{{activity.requirements}}</text>
+      </view>
+
+      <view class="section" wx:if="{{activity.agenda && activity.agenda.length > 0}}">
+        <text class="section-title">活动议程</text>
+        <view class="agenda-list">
+          <view wx:for="{{activity.agenda}}" wx:key="index" class="agenda-item">
+            <view class="agenda-time">{{item.time}}</view>
+            <view class="agenda-content">{{item.content}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 评论内容 -->
+    <view class="tab-content" wx:if="{{currentTab === 'reviews'}}">
+      <block wx:if="{{reviews.length > 0}}">
+        <view wx:for="{{reviews}}" wx:key="id" class="review-item">
+          <view class="review-header">
+            <image class="user-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="review-user-info">
+              <text class="user-name">{{item.userName}}</text>
+              <text class="review-time">{{formatDate(item.createTime)}}</text>
+            </view>
+            <view class="review-rating">
+              <text class="rating-value">{{item.rating}}</text>
+              <text class="rating-unit">分</text>
+            </view>
+          </view>
+          <text class="review-content">{{item.content}}</text>
+          <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+            <image
+              wx:for="{{item.images}}"
+              wx:key="index"
+              class="review-image"
+              src="{{item}}"
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-index="{{index}}"
+            ></image>
+          </view>
+        </view>
+        
+        <view class="load-more" bindtap="loadMoreReviews" wx:if="{{hasMoreReviews}}">
+          <text>加载更多</text>
+        </view>
+      </block>
+      <view wx:else class="empty-reviews">
+        <text>暂无评论</text>
+      </view>
+    </view>
+
+    <!-- 参与者列表 -->
+    <view class="tab-content" wx:if="{{currentTab === 'participants'}}">
+      <block wx:if="{{participants.length > 0}}">
+        <view class="participants-grid">
+          <view wx:for="{{participants}}" wx:key="id" class="participant-item">
+            <image class="participant-avatar" src="{{item.avatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+            <text class="participant-name">{{item.name}}</text>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty-participants">
+        <text>暂无参与者</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-action-bar">
+    <button class="contact-btn" bindtap="contactService">
+      <icon type="phone" size="20"></icon>
+      联系
+    </button>
+    <button class="join-btn {{isJoined ? 'joined' : ''}}" bindtap="toggleJoin">
+      {{isJoined ? '已参加' : '立即参加'}}
+    </button>
+  </view>
+
+  <!-- 地图弹窗 -->
+  <view wx:if="{{showMapModal}}" class="map-modal">
+    <view class="map-modal-content">
+      <view class="map-modal-header">
+        <text class="map-modal-title">{{activity.name}}位置</text>
+        <icon class="close-btn" type="clear" size="20" bindtap="closeMapModal"></icon>
+      </view>
+      <view class="map-container">
+        <map
+          id="map"
+          longitude="{{mapCenter.longitude}}"
+          latitude="{{mapCenter.latitude}}"
+          markers="{{markers}}"
+          scale="16"
+          show-location="true"
+          style="width: 100%; height: 300px;"
+        ></map>
+      </view>
+      <button class="open-map-btn" bindtap="openLocation">
+        打开地图导航
+      </button>
+    </view>
+    <view class="map-modal-mask" bindtap="closeMapModal"></view>
+  </view>
+</view>

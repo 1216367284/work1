@@ -1,0 +1,275 @@
+/* app.wxss */
+/* 全局样式 */
+
+/* 重置样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 通用样式 */
+.container {
+  padding: 16rpx;
+}
+
+.section {
+  background-color: #ffffff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-block;
+  padding: 20rpx 40rpx;
+  font-size: 32rpx;
+  border-radius: 8rpx;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: #1E90FF;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333333;
+  border: 1rpx solid #d0d0d0;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: #ffffff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.card-content {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* 列表样式 */
+.list {
+  background-color: #ffffff;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* 输入框样式 */
+.input {
+  width: 100%;
+  padding: 20rpx;
+  font-size: 32rpx;
+  border: 1rpx solid #d0d0d0;
+  border-radius: 8rpx;
+  background-color: #ffffff;
+}
+
+/* 图片样式 */
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
+.img-thumbnail {
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+/* 加载动画 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80rpx 0;
+  color: #999999;
+  font-size: 28rpx;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  font-size: 24rpx;
+  border-radius: 20rpx;
+  margin-right: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.tag-primary {
+  background-color: #e8f4fd;
+  color: #1E90FF;
+}
+
+/* 评分样式 */
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating-stars {
+  display: flex;
+  margin-right: 8rpx;
+}
+
+/* 位置信息 */
+.location {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666666;
+}
+
+/* 价格样式 */
+.price {
+  font-size: 36rpx;
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+/* 价格标签 */
+.price-tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  font-size: 24rpx;
+  background-color: #fff2f0;
+  color: #ff4d4f;
+  border-radius: 4rpx;
+}
+
+/* 标签栏切换 */
+.tab-bar {
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #f0f0f0;
+  margin-bottom: 20rpx;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 20rpx 0;
+  text-align: center;
+  font-size: 32rpx;
+  color: #666666;
+  border-bottom: 4rpx solid transparent;
+}
+
+.tab-item.active {
+  color: #1E90FF;
+  border-bottom-color: #1E90FF;
+}
+
+/* 搜索框 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.search-input {
+  flex: 1;
+  height: 72rpx;
+  background-color: #f5f5f5;
+  border-radius: 36rpx;
+  padding: 0 32rpx;
+  font-size: 28rpx;
+}
+
+.search-btn {
+  margin-left: 16rpx;
+  padding: 0 32rpx;
+  font-size: 28rpx;
+  color: #1E90FF;
+}
+
+/* 地图容器 */
+.map-container {
+  width: 100%;
+  height: 100vh;
+}
+
+/* 底部弹出层 */
+.bottom-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* 遮罩层 */
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}

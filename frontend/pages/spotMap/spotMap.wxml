@@ -1,0 +1,98 @@
+<!-- spotMap.wxml - 景点地图页面 -->
+<view class="map-container">
+  <!-- 地图组件 -->
+  <map
+    id="spotMap"
+    class="map"
+    longitude="{{centerLocation.longitude}}"
+    latitude="{{centerLocation.latitude}}"
+    scale="{{currentZoom}}"
+    markers="{{markers}}"
+    show-location
+    enable-rotate
+    enable-zoom
+    enable-scroll
+    enable-satellite
+    enable-building
+    bindmarkertap="handleMarkerTap"
+    bindtap="handleMapClick"
+    bindregionchange="handleMapRegionChange"
+  >
+  </map>
+
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-container">
+      <icon class="search-icon" type="search" size="16"></icon>
+      <input
+        class="search-input"
+        placeholder="搜索景点"
+        value="{{searchKeyword}}"
+        bindinput="handleInput"
+        bindconfirm="handleSearch"
+      ></input>
+      <view wx:if="searchKeyword" class="clear-btn" bindtap="clearSearch">
+        <icon type="clear" size="14"></icon>
+      </view>
+    </view>
+    <button class="search-btn" bindtap="handleSearch">搜索</button>
+  </view>
+
+  <!-- 信息窗口 -->
+  <view wx:if="{{showInfoWindow && selectedSpot}}" class="info-window">
+    <view class="info-window-header">
+      <image class="spot-image" src="{{selectedSpot.coverImage || '/assets/images/default-spot.jpg'}}" mode="aspectFill"></image>
+      <view class="spot-basic-info">
+        <view class="spot-name">{{selectedSpot.name}}</view>
+        <view class="spot-rating">
+          <text class="rating-score">{{selectedSpot.rating}}</text>
+          <text class="rating-label">分</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="info-window-content">
+      <view class="info-item">
+        <icon class="info-icon" type="location" size="14"></icon>
+        <text class="info-text">{{selectedSpot.address}}</text>
+      </view>
+      <view class="info-item">
+        <icon class="info-icon" type="clock" size="14"></icon>
+        <text class="info-text">{{selectedSpot.openingHours}}</text>
+      </view>
+      <view class="info-item">
+        <icon class="info-icon" type="money" size="14"></icon>
+        <text class="info-text">
+          {{selectedSpot.ticketPrice === 0 ? '免费' : '¥' + selectedSpot.ticketPrice}}
+        </text>
+      </view>
+      <view class="info-description">{{selectedSpot.description}}</view>
+    </view>
+    
+    <view class="info-window-actions">
+      <button class="action-btn view-detail-btn" bindtap="navigateToSpotDetail">查看详情</button>
+      <button class="action-btn route-btn" bindtap="viewRoute">导航路线</button>
+    </view>
+  </view>
+
+  <!-- 底部控制按钮 -->
+  <view class="map-controls">
+    <button class="control-btn" bindtap="switchMapType" size="mini" type="primary">
+      <text wx:if="{{mapType === 'gaode'}}">高德</text>
+      <text wx:elif="{{mapType === 'baidu'}}">百度</text>
+      <text wx:else>腾讯</text>
+    </button>
+    <button class="control-btn" bindtap="locateUser" size="mini" type="primary">
+      <icon type="location" size="16"></icon>
+      定位
+    </button>
+  </view>
+
+  <!-- 加载提示 -->
+  <view wx:if="{{loading}}" class="loading-mask">
+    <view class="loading-content">
+      <image class="loading-icon" src="/assets/icons/loading.gif" mode="aspectFit"></image>
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+</view>

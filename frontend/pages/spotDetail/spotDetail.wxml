@@ -1,0 +1,214 @@
+<!-- spotDetail.wxml - 景点详情页面 -->
+<view class="page-container">
+  <!-- 加载中状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <image class="loading-icon" src="/assets/icons/loading.gif" mode="aspectFit"></image>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 景点详情内容 -->
+  <view wx:else class="spot-detail">
+    <!-- 图片轮播 -->
+    <view class="image-carousel">
+      <swiper
+        class="swiper"
+        indicator-dots="true"
+        indicator-active-color="#fff"
+        autoplay="true"
+        interval="3000"
+        duration="500"
+        bindchange="onImageChange"
+        circular="true"
+      >
+        <block wx:for="{{images}}" wx:key="index">
+          <swiper-item>
+            <image
+              class="spot-image"
+              src="{{item}}"
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-index="{{index}}"
+            ></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="image-count">{{currentImageIndex + 1}}/{{images.length}}</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="spot-basic-info">
+      <view class="spot-title-section">
+        <text class="spot-name">{{spot.name}}</text>
+        <button class="favorite-btn" bindtap="toggleFavorite">
+          <icon type="{{isFavorite ? 'success' : 'star-o'}}" size="20" color="{{isFavorite ? '#1aad19' : '#666'}}"></icon>
+        </button>
+      </view>
+
+      <view class="spot-rating">
+        <text class="rating-score">{{spot.rating}}</text>
+        <text class="rating-label">分</text>
+        <text class="review-count">({{spot.reviewCount}}条点评)</text>
+      </view>
+
+      <view class="spot-price">
+        <text wx:if="{{spot.ticketPrice === 0}}">免费</text>
+        <text wx:else>¥{{spot.ticketPrice}}起</text>
+      </view>
+
+      <view class="spot-address">
+        <icon class="address-icon" type="location" size="16"></icon>
+        <text class="address-text">{{spot.address}}</text>
+        <button class="navigate-btn" bindtap="navigateToMap">导航</button>
+      </view>
+    </view>
+
+    <!-- 标签页切换 -->
+    <view class="tabs">
+      <view
+        class="tab {{currentTab === 'overview' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="overview"
+      >
+        概览
+      </view>
+      <view
+        class="tab {{currentTab === 'reviews' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="reviews"
+      >
+        点评({{spot.reviewCount}})
+      </view>
+      <view
+        class="tab {{currentTab === 'nearby' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="nearby"
+      >
+        附近
+      </view>
+    </view>
+
+    <!-- 概览内容 -->
+    <view class="tab-content" wx:if="{{currentTab === 'overview'}}">
+      <view class="section">
+        <text class="section-title">景点介绍</text>
+        <text class="section-content">{{spot.description}}</text>
+      </view>
+
+      <view class="section" wx:if="{{spot.openTime}}">
+        <text class="section-title">开放时间</text>
+        <text class="section-content">{{spot.openTime}}</text>
+      </view>
+
+      <view class="section" wx:if="{{spot.features && spot.features.length > 0}}">
+        <text class="section-title">景点特色</text>
+        <view class="features-list">
+          <text wx:for="{{spot.features}}" wx:key="index" class="feature-tag">{{item}}</text>
+        </view>
+      </view>
+
+      <view class="section" wx:if="{{activities.length > 0}}">
+        <text class="section-title">相关活动</text>
+        <view class="activities-list">
+          <view wx:for="{{activities}}" wx:key="id" class="activity-item">
+            <image class="activity-image" src="{{item.image || '/assets/images/default-activity.jpg'}}" mode="aspectFill"></image>
+            <view class="activity-info">
+              <text class="activity-name">{{item.name}}</text>
+              <text class="activity-time">{{formatDate(item.startTime)}} - {{formatDate(item.endTime)}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 点评内容 -->
+    <view class="tab-content" wx:if="{{currentTab === 'reviews'}}">
+      <block wx:if="{{reviews.length > 0}}">
+        <view wx:for="{{reviews}}" wx:key="id" class="review-item">
+          <view class="review-header">
+            <image class="user-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="review-user-info">
+              <text class="user-name">{{item.userName}}</text>
+              <text class="review-time">{{formatDate(item.createTime)}}</text>
+            </view>
+            <view class="review-rating">
+              <text class="rating-value">{{item.rating}}</text>
+              <text class="rating-unit">分</text>
+            </view>
+          </view>
+          <text class="review-content">{{item.content}}</text>
+          <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+            <image
+              wx:for="{{item.images}}"
+              wx:key="index"
+              class="review-image"
+              src="{{item}}"
+              mode="aspectFill"
+              bindtap="previewImage"
+              data-index="{{index}}"
+            ></image>
+          </view>
+        </view>
+        
+        <view class="load-more" bindtap="loadMoreReviews" wx:if="{{hasMoreReviews}}">
+          <text>加载更多</text>
+        </view>
+      </block>
+      <view wx:else class="empty-reviews">
+        <text>暂无点评</text>
+      </view>
+    </view>
+
+    <!-- 附近内容 -->
+    <view class="tab-content" wx:if="{{currentTab === 'nearby'}}">
+      <block wx:if="{{nearbySpots.length > 0}}">
+        <view wx:for="{{nearbySpots}}" wx:key="id" class="nearby-item" bindtap="navigateToNearbySpot" data-id="{{item.id}}">
+          <image class="nearby-image" src="{{item.coverImage || '/assets/images/default-spot.jpg'}}" mode="aspectFill"></image>
+          <view class="nearby-info">
+            <text class="nearby-name">{{item.name}}</text>
+            <text class="nearby-rating">{{item.rating}}分</text>
+            <text class="nearby-distance">距离{{calculateDistance(spot.latitude, spot.longitude, item.latitude, item.longitude)}}</text>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty-nearby">
+        <text>暂无附近景点</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-action-bar">
+    <button class="contact-btn" bindtap="contactService">
+      <icon type="phone" size="20"></icon>
+      联系
+    </button>
+    <button class="book-btn" bindtap="bookTicket">
+      立即预约
+    </button>
+  </view>
+
+  <!-- 地图弹窗 -->
+  <view wx:if="{{showMapModal}}" class="map-modal">
+    <view class="map-modal-content">
+      <view class="map-modal-header">
+        <text class="map-modal-title">{{spot.name}}位置</text>
+        <icon class="close-btn" type="clear" size="20" bindtap="closeMapModal"></icon>
+      </view>
+      <view class="map-container">
+        <map
+          id="map"
+          longitude="{{mapCenter.longitude}}"
+          latitude="{{mapCenter.latitude}}"
+          markers="{{markers}}"
+          scale="16"
+          show-location="true"
+          style="width: 100%; height: 300px;"
+        ></map>
+      </view>
+      <button class="open-map-btn" bindtap="openLocation">
+        打开地图导航
+      </button>
+    </view>
+    <view class="map-modal-mask" bindtap="closeMapModal"></view>
+  </view>
+</view>

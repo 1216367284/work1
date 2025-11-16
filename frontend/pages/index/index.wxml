@@ -1,0 +1,178 @@
+<!-- index.wxml - 首页 -->
+<view class="index-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar" bindtap="goToSearch">
+    <view class="search-input-wrapper">
+      <icon class="search-icon" type="search" size="14"></icon>
+      <text class="search-placeholder">搜索景点、活动、路线...</text>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <view class="banner-section">
+    <swiper
+      class="banner-swiper"
+      indicator-dots="true"
+      autoplay="true"
+      interval="5000"
+      duration="500"
+      circular="true"
+    >
+      <block wx:for="{{bannerList}}" wx:key="id">
+        <swiper-item bindtap="onBannerClick" data-id="{{item.id}}">
+          <image
+            class="banner-image"
+            src="{{item.image || '/assets/images/default-banner.png'}}"
+            mode="aspectFill"
+          ></image>
+          <view class="banner-title">{{item.title}}</view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="function-section">
+    <view class="function-item" bindtap="goToMap">
+      <view class="function-icon">
+        <image src="/assets/icons/map_locate.png" mode="aspectFit"></image>
+      </view>
+      <text class="function-text">景点地图</text>
+    </view>
+    <view class="function-item" bindtap="goToSpotList">
+      <view class="function-icon">
+        <image src="/assets/icons/spot_list.png" mode="aspectFit"></image>
+      </view>
+      <text class="function-text">全部景点</text>
+    </view>
+    <view class="function-item" bindtap="goToActivityList">
+      <view class="function-icon">
+        <image src="/assets/icons/activity.png" mode="aspectFit"></image>
+      </view>
+      <text class="function-text">旅游活动</text>
+    </view>
+    <view class="function-item" bindtap="goToRoute">
+      <view class="function-icon">
+        <image src="/assets/icons/route.png" mode="aspectFit"></image>
+      </view>
+      <text class="function-text">路线规划</text>
+    </view>
+  </view>
+
+  <!-- 热门景点 -->
+  <view class="section">
+    <view class="section-title">
+      <text>热门景点</text>
+      <view class="section-more" bindtap="goToSpotList">
+        <text>查看更多</text>
+        <icon type="right" size="10"></icon>
+      </view>
+    </view>
+    
+    <view class="spot-list">
+      <block wx:for="{{hotSpots}}" wx:key="id">
+        <view 
+          class="spot-item" 
+          bindtap="goToSpotDetail" 
+          data-id="{{item.id}}"
+        >
+          <view class="spot-image-container">
+            <image 
+              class="spot-image" 
+              src="{{item.imageUrl || '/assets/images/default-spot.png'}}" 
+              mode="aspectFill"
+            ></image>
+            <view class="spot-tag" wx:if="{{item.tags && item.tags.length > 0}}">
+              {{item.tags[0]}}
+            </view>
+          </view>
+          <view class="spot-info">
+            <view class="spot-name">{{item.name}}</view>
+            <view class="spot-meta">
+              <view class="spot-rating">
+                <text class="rating-score">{{item.averageRating || '暂无评分'}}</text>
+                <view class="rating-stars">
+                  <block wx:for="[1,2,3,4,5]" wx:key="index">
+                    <icon 
+                      type="star" 
+                      size="10" 
+                      color="{{index < Math.floor(item.averageRating) ? '#FFD700' : '#DCDCDC'}}" 
+                    ></icon>
+                  </block>
+                </view>
+              </view>
+              <view class="spot-distance">
+                <icon type="location" size="10" color="#999"></icon>
+                <text>{{item.distance || '未知距离'}}</text>
+              </view>
+            </view>
+            <view class="spot-price">
+              <text class="price-label">门票:</text>
+              <text class="price-value">{{item.ticketPrice ? '¥' + item.ticketPrice : '免费'}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{hotSpots.length === 0 && !loading}}">
+      <text>暂无热门景点数据</text>
+    </view>
+  </view>
+
+  <!-- 近期活动 -->
+  <view class="section">
+    <view class="section-title">
+      <text>近期活动</text>
+      <view class="section-more" bindtap="goToActivityList">
+        <text>查看更多</text>
+        <icon type="right" size="10"></icon>
+      </view>
+    </view>
+    
+    <view class="activity-list">
+      <block wx:for="{{recentActivities}}" wx:key="id">
+        <view 
+          class="activity-item" 
+          bindtap="goToActivityDetail" 
+          data-id="{{item.id}}"
+        >
+          <view class="activity-image-container">
+            <image 
+              class="activity-image" 
+              src="{{item.imageUrl || '/assets/images/default-activity.png'}}" 
+              mode="aspectFill"
+            ></image>
+            <view class="activity-status" wx:if="{{item.status === 'ongoing'}}">
+              进行中
+            </view>
+            <view class="activity-status upcoming" wx:elif="{{item.status === 'upcoming'}}">
+              即将开始
+            </view>
+          </view>
+          <view class="activity-info">
+            <view class="activity-name">{{item.title}}</view>
+            <view class="activity-date">
+              {{item.startTime ? item.startTime.split(' ')[0] : ''}} - {{item.endTime ? item.endTime.split(' ')[0] : ''}}
+            </view>
+            <view class="activity-meta">
+              <text class="activity-location">{{item.location}}</text>
+              <text class="activity-participants">{{item.participantCount}}人参加</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{recentActivities.length === 0 && !loading}}">
+      <text>暂无近期活动</text>
+    </view>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

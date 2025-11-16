@@ -1,0 +1,504 @@
+/* activityDetail.wxss - 活动详情页面样式 */
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+}
+
+.loading-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #999;
+}
+
+/* 图片轮播 */
+.image-carousel {
+  position: relative;
+  height: 250px;
+}
+
+.swiper {
+  height: 100%;
+}
+
+.activity-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.image-count {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* 基本信息 */
+.activity-basic-info {
+  padding: 15px;
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+
+.activity-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.activity-time, .activity-location {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.time-icon, .location-icon {
+  color: #666;
+  margin-right: 8px;
+}
+
+.location-text {
+  flex: 1;
+  font-size: 14px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navigate-btn {
+  padding: 4px 12px;
+  font-size: 13px;
+  background-color: #1aad19;
+  color: #fff;
+  border-radius: 15px;
+}
+
+.activity-price {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.price-label {
+  color: #666;
+  margin-right: 5px;
+}
+
+.free-text {
+  color: #1aad19;
+  font-weight: bold;
+}
+
+.price-text {
+  color: #e64340;
+  font-weight: bold;
+}
+
+/* 倒计时 */
+.countdown-section {
+  margin-bottom: 12px;
+}
+
+.countdown-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.countdown {
+  display: flex;
+  align-items: center;
+}
+
+.time-box {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.time-number {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.time-unit {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.time-separator {
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 5px;
+}
+
+.participant-count {
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.count-label {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 标签页 */
+.tabs {
+  display: flex;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 15px;
+  color: #666;
+  position: relative;
+}
+
+.tab.active {
+  color: #1aad19;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background-color: #1aad19;
+  border-radius: 1.5px;
+}
+
+/* 内容区域 */
+.tab-content {
+  background-color: #fff;
+  padding-bottom: 60px;
+  min-height: 300px;
+}
+
+/* 活动详情内容 */
+.section {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.section-content {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* 活动议程 */
+.agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agenda-item {
+  display: flex;
+  padding-left: 20px;
+  position: relative;
+}
+
+.agenda-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  background-color: #1aad19;
+  border-radius: 50%;
+}
+
+.agenda-time {
+  font-weight: bold;
+  color: #333;
+  min-width: 80px;
+  margin-right: 10px;
+}
+
+.agenda-content {
+  flex: 1;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 评论列表 */
+.review-item {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.review-user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.review-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.review-rating {
+  display: flex;
+  align-items: baseline;
+}
+
+.rating-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff9500;
+  margin-right: 2px;
+}
+
+.rating-unit {
+  font-size: 12px;
+  color: #ff9500;
+}
+
+.review-content {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.review-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+}
+
+.load-more, .empty-reviews {
+  padding: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 参与者列表 */
+.participants-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 10px;
+}
+
+.participant-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.participant-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 8px;
+}
+
+.participant-name {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.empty-participants {
+  padding: 60px 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 底部操作栏 */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background-color: #fff;
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
+  z-index: 100;
+}
+
+.contact-btn {
+  flex: 1;
+  margin-right: 10px;
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-btn icon {
+  margin-right: 5px;
+}
+
+.join-btn {
+  flex: 2;
+  background-color: #e64340;
+  color: #fff;
+  font-size: 15px;
+}
+
+.join-btn.joined {
+  background-color: #999;
+}
+
+/* 地图弹窗 */
+.map-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.map-modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.map-modal-content {
+  background-color: #fff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  position: relative;
+  z-index: 1;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.map-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.map-modal-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-btn {
+  color: #999;
+}
+
+.map-container {
+  height: 300px;
+  border-bottom: 1px solid #eee;
+}
+
+.open-map-btn {
+  margin: 15px;
+  background-color: #1aad19;
+  color: #fff;
+  font-size: 15px;
+}
+
+/* 响应式样式调整 */
+@media screen and (min-width: 768px) {
+  .page-container {
+    max-width: 768px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .bottom-action-bar {
+    max-width: 768px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+  }
+}

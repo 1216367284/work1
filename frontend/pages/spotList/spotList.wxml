@@ -1,0 +1,143 @@
+<!-- spotList.wxml - 景点列表页面 -->
+<view class="page-container">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-container">
+      <icon class="search-icon" type="search" size="16"></icon>
+      <input
+        class="search-input"
+        placeholder="搜索景点名称、地址等"
+        value="{{searchKeyword}}"
+        bindinput="handleInput"
+        bindconfirm="handleSearch"
+      ></input>
+      <view wx:if="searchKeyword" class="clear-btn" bindtap="clearSearch">
+        <icon type="clear" size="14"></icon>
+      </view>
+    </view>
+    <button class="map-btn" bindtap="navigateToSpotMap">
+      <icon type="location" size="16"></icon>
+      地图
+    </button>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-item" bindtap="toggleFilterPanel">
+      <text class="filter-text">{{selectedCategory ? getCategoryName(selectedCategory) : '全部类型'}}</text>
+      <icon class="filter-arrow" type="down" size="14"></icon>
+    </view>
+    <view class="filter-item" bindtap="toggleFilterPanel">
+      <text class="filter-text">{{getSortName(filters.sortBy)}}</text>
+      <icon class="filter-arrow" type="down" size="14"></icon>
+    </view>
+  </view>
+
+  <!-- 筛选面板 -->
+  <view wx:if="{{showFilterPanel}}" class="filter-panel">
+    <view class="filter-panel-header">
+      <text class="filter-panel-title">筛选条件</text>
+      <icon class="close-btn" type="clear" size="20" bindtap="toggleFilterPanel"></icon>
+    </view>
+    
+    <!-- 分类选择 -->
+    <view class="filter-section">
+      <text class="filter-section-title">景点类型</text>
+      <view class="category-list">
+        <view
+          wx:for="{{categories}}"
+          wx:key="id"
+          class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+          bindtap="selectCategory"
+          data-category="{{item.id}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 排序选择 -->
+    <view class="filter-section">
+      <text class="filter-section-title">排序方式</text>
+      <view class="sort-list">
+        <view
+          wx:for="{{sortOptions}}"
+          wx:key="id"
+          class="sort-item {{filters.sortBy === item.id ? 'active' : ''}}"
+          bindtap="selectSort"
+          data-sort="{{item.id}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="filter-actions">
+      <button class="reset-btn" bindtap="resetFilters">重置</button>
+      <button class="apply-btn" bindtap="applyFilters">确定</button>
+    </view>
+  </view>
+
+  <!-- 景点列表 -->
+  <view class="spot-list">
+    <block wx:if="{{filteredSpots.length > 0}}">
+      <view
+        wx:for="{{filteredSpots}}"
+        wx:key="id"
+        class="spot-item"
+        bindtap="navigateToSpotDetail"
+        data-id="{{item.id}}"
+      >
+        <image class="spot-image" src="{{item.coverImage || '/assets/images/default-spot.jpg'}}" mode="aspectFill"></image>
+        
+        <view class="spot-info">
+          <view class="spot-name">{{item.name}}</view>
+          
+          <view class="spot-rating">
+            <text class="rating-score">{{item.rating}}</text>
+            <text class="rating-label">分</text>
+            <text class="review-count">({{item.reviewCount}}条点评)</text>
+          </view>
+          
+          <view class="spot-address">
+            <icon class="address-icon" type="location" size="12"></icon>
+            <text>{{item.address}}</text>
+          </view>
+          
+          <view class="spot-bottom-info">
+            <view class="spot-price">
+              <text wx:if="{{item.ticketPrice === 0}}" class="free-tag">免费</text>
+              <text wx:else class="price-tag">¥{{item.ticketPrice}}</text>
+            </view>
+            
+            <view wx:if="{{item.distance}}" class="spot-distance">
+              <text>{{formatDistance(item.distance)}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <view wx:elif="{{!loading}}" class="empty-state">
+      <image class="empty-icon" src="/assets/icons/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无符合条件的景点</text>
+    </view>
+    
+    <!-- 加载中状态 -->
+    <view wx:if="{{loading && filteredSpots.length === 0}}" class="loading-state">
+      <image class="loading-icon" src="/assets/icons/loading.gif" mode="aspectFit"></image>
+      <text class="loading-text">加载中...</text>
+    </view>
+    
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore && filteredSpots.length > 0}}" class="load-more">
+      <text>上拉加载更多</text>
+    </view>
+    
+    <!-- 已加载全部 -->
+    <view wx:if="{{!hasMore && filteredSpots.length > 0}}" class="load-all">
+      <text>已加载全部</text>
+    </view>
+  </view>
+</view>
